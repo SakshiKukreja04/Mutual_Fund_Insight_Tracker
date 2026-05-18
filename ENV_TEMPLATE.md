@@ -1,5 +1,7 @@
 # Production Environment Variables Template
 
+⚠️ **THIS IS A TEMPLATE FILE** - Never commit actual credentials here. Replace all `YOUR_*` placeholders with your actual values locally only.
+
 ## Backend (.env) - NEVER COMMIT THIS FILE
 
 Keep this file in `.gitignore` and update with your actual values on each deployment platform.
@@ -7,10 +9,12 @@ Keep this file in `.gitignore` and update with your actual values on each deploy
 ### Local Development
 ```env
 PORT=5000
-MONGO_URI=mongodb+srv://sakshikukreja:sakshi@cluster0.mcsk3re.mongodb.net/Aureva-Fund-Insight-Tracker?appName=Cluster0
+MONGO_URI=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@cluster0.mcsk3re.mongodb.net/Aureva-Fund-Insight-Tracker?appName=Cluster0
 MF_API_BASE_URL=https://api.mfapi.in
 FRONTEND_URL=http://localhost:5173
 ```
+
+⚠️ Replace `YOUR_USERNAME` and `YOUR_PASSWORD` with your actual MongoDB Atlas credentials
 
 ### Production (Render)
 ```env
