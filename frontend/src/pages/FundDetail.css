@@ -1,0 +1,205 @@
+/* Fund Detail page styles */
+.fund-detail-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.fund-header {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.header-info h1 {
+  margin: 0 0 0.75rem 0;
+  color: #333;
+  font-size: 1.8rem;
+}
+
+.scheme-code {
+  color: #999;
+  font-size: 0.95rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.nav-info {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.latest-nav {
+  color: #666;
+  font-size: 1rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.nav-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #0066cc;
+}
+
+.chart-section {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.chart-placeholder {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #999;
+  background-color: #f9fafb;
+  border-radius: 6px;
+  border: 1px dashed #ddd;
+}
+
+.range-buttons {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.range-btn {
+  padding: 0.8rem 1.6rem;
+  border: 2px solid #ddd;
+  background-color: #f0f7ff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  min-width: 70px;
+  text-align: center;
+}
+
+.range-btn:hover {
+  border-color: #0066cc;
+  background-color: #e6f0ff;
+  color: #0066cc;
+}
+
+.range-btn.active {
+  background-color: #0066cc;
+  color: white;
+  border-color: #0066cc;
+  box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
+}
+
+.error-message {
+  background-color: #fee;
+  color: #c00;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.stats-section {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.stats-section h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 1.3rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5fa 100%);
+  border: 1px solid #e0e8f0;
+  border-radius: 6px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.1);
+  border-color: #0066cc;
+}
+
+.stat-label {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0 0 0.75rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #0066cc;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .fund-header {
+    padding: 1.5rem;
+  }
+
+  .header-info h1 {
+    font-size: 1.4rem;
+  }
+
+  .nav-value {
+    font-size: 1.5rem;
+  }
+
+  .chart-section {
+    padding: 1.5rem;
+  }
+
+  .range-buttons {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .range-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .stats-section {
+    padding: 1.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .stat-value {
+    font-size: 1.3rem;
+  }
+}

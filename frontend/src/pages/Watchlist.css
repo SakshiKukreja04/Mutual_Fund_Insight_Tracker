@@ -1,0 +1,160 @@
+/* Watchlist page styles */
+.watchlist-page {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.watchlist-page h1 {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border: 2px dashed #ddd;
+}
+
+.empty-state h2 {
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  color: #999;
+  margin-bottom: 1.5rem;
+}
+
+.primary-button {
+  padding: 0.75rem 2rem;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.primary-button:hover {
+  background-color: #0052a3;
+}
+
+.watchlist-container {
+  margin-top: 1rem;
+}
+
+.watchlist-count {
+  color: #666;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.watchlist-items {
+  display: grid;
+  gap: 1rem;
+}
+
+.watchlist-item {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.item-info {
+  flex: 1;
+}
+
+.item-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.scheme-code {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0.25rem 0;
+}
+
+.added-date {
+  color: #999;
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0 0;
+}
+
+.item-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: 1rem;
+}
+
+.view-button,
+.remove-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+
+.view-button {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.view-button:hover {
+  background-color: #e0e0e0;
+}
+
+.remove-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.remove-button:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.remove-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background-color: #fee;
+  color: #c00;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .watchlist-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .item-actions {
+    margin-left: 0;
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .item-actions button {
+    flex: 1;
+  }
+}
