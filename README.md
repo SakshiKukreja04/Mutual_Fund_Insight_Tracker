@@ -2,25 +2,35 @@
 
 A MERN stack application for tracking and analyzing Indian mutual funds with real-time NAV data and historical charting.
 
+**Live URL:** https://your-vercel-url.vercel.app
+
+## Tech Stack
+
+- **Frontend**: React, Vite, Recharts
+- **Backend**: Express.js, Node.js
+- **Database**: MongoDB Atlas
+- **External API**: MFapi.in
+
 ## Features
 
-- **Fund Search**: Search for Indian mutual funds by name or code
-- **Watchlist Management**: Add/remove funds to a personal watchlist
-- **NAV Charts**: Interactive time-series charts for historical NAV data
-- **Time Range Filtering**: View 1Y, 3Y, 5Y, or All historical data
-- **Fund Statistics**: Display data points, latest NAV, highest, and lowest prices
+- **Search Indian Mutual Funds**: Search funds by name or code
+- **Add Funds to Watchlist**: Save favorite funds for easy tracking
+- **Remove Funds from Watchlist**: Manage your watchlist
+- **View NAV Growth Chart**: Interactive historical NAV visualization
+- **Range Filters**: View data for 1Y, 3Y, 5Y, or All periods
+- **Fund Statistics**: Latest NAV, highest/lowest prices, data point counts
 
 ## Architecture
 
 ### Backend (Express.js + Node.js)
-- RESTful API with Express
+- RESTful API with Express middleware
 - MongoDB Atlas for persistent storage
-- MFapi.in integration for mutual fund data
-- In-memory caching for API responses
+- MFapi.in integration with backend proxy pattern
+- In-memory caching (1-hour TTL) for API responses
 
 ### Frontend (React + Vite)
 - React Router for navigation
-- Recharts for data visualization
+- Recharts for interactive data visualization
 - Axios for HTTP requests
 - Responsive CSS design
 
@@ -37,45 +47,24 @@ A MERN stack application for tracking and analyzing Indian mutual funds with rea
 ### Fund Details
 - `GET /api/funds/{schemeCode}` - Fetch fund NAV history and metadata
 
-## Technical Implementation
+## Environment Variables
 
-### NAV Data Processing
-
-NAV data from MFapi.in is parsed defensively because dates are returned in `dd-mm-yyyy` format and NAV values are strings. The frontend:
-1. Validates input is an array
-2. Splits dates by "-" character
-3. Converts dates from dd-mm-yyyy to yyyy-mm-dd format
-4. Converts NAV strings to floating-point numbers
-5. Removes invalid records (malformed dates or NAV values)
-6. Sorts data from oldest to newest before rendering the chart
-
-Example transformation:
-```js
-// Input from MFapi.in
-{ date: "16-05-2025", nav: "103.4567" }
-
-// Output from parseNavData
-{ date: "2025-05-16", nav: 103.4567, timestamp: Date object }
+### Backend (.env)
+```
+PORT=5000
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/Aureva-Fund-Insight-Tracker
+MF_API_BASE_URL=https://api.mfapi.in
+FRONTEND_URL=http://localhost:5173
 ```
 
-### Backend Caching
+### Frontend (.env)
+```
+VITE_API_BASE_URL=http://localhost:5000/api
+```
 
-Historical NAV API responses are cached in-memory on the backend for 1 hour to reduce repeated calls to MFapi.in:
-- First request for a fund → calls MFapi.in
-- Subsequent requests within 1 hour → returns cached response
-- After 1 hour → calls MFapi.in again and updates cache
+See [ENV_TEMPLATE.md](ENV_TEMPLATE.md) for template with detailed instructions.
 
-Cache key: `schemeCode` (e.g., "150750")
-Cache duration: 3,600,000 milliseconds (1 hour)
-
-### Range Filtering
-
-Time range filters (1Y, 3Y, 5Y, All) work by:
-1. Calculating the cutoff date based on the selected range from the current date
-2. Filtering the parsed NAV data to include only dates >= cutoff date
-3. Re-rendering the chart with the filtered data
-
-## Setup
+## Run Locally
 
 ### Backend
 ```bash
@@ -91,26 +80,44 @@ npm install
 npm run dev
 ```
 
-## Environment Variables
+Backend runs on `http://localhost:5000`  
+Frontend runs on `http://localhost:5173`
 
-### Backend (.env)
-```
-PORT=5000
-MONGO_URI=your_mongodb_atlas_connection_string
-MF_API_BASE_URL=https://api.mfapi.in
-FRONTEND_URL=http://localhost:5173
+## Technical Implementation
+
+### NAV Data Processing
+
+NAV data from MFapi.in is parsed defensively because dates are returned in `dd-mm-yyyy` format and NAV values are strings:
+
+1. Validates input is an array
+2. Splits dates by "-" character
+3. Converts dates from dd-mm-yyyy to yyyy-mm-dd format
+4. Converts NAV strings to floating-point numbers
+5. Removes invalid records (malformed dates or NAV values)
+6. Sorts data from oldest to newest before rendering
+
+Example transformation:
+```js
+// Input from MFapi.in
+{ date: "16-05-2025", nav: "103.4567" }
+
+// Output from parseNavData
+{ date: "2025-05-16", nav: 103.4567, timestamp: Date object }
 ```
 
-### Frontend (.env)
-```
-VITE_API_BASE_URL=http://localhost:5000/api
-```
+### Backend Caching
 
-## Default Search Keywords
+Historical NAV API responses cached in-memory for 1 hour:
+- First request → calls MFapi.in
+- Subsequent requests (within 1 hour) → returns cached response
+- After 1 hour → calls MFapi.in again and updates cache
 
-- **Fund Families**: HDFC, ICICI, Axis, SBI, Aditya Birla, Reliance, DSP, Franklin, NIPPON, IDFC
-- **Fund Types**: Large Cap, Mid Cap, Small Cap, Balanced, Debt, Liquid, Gold, Tax Saver, Index
-- **Example Searches**: "HDFC Growth", "SBI Technology", "Axis Bluechip"
+### Range Filtering
+
+Time range filters (1Y, 3Y, 5Y, All) work by:
+1. Calculating cutoff date based on selected range from current date
+2. Filtering parsed NAV data to include only dates >= cutoff date
+3. Re-rendering chart with filtered data
 
 ## Data Flow
 
@@ -139,6 +146,27 @@ VITE_API_BASE_URL=http://localhost:5000/api
    - filterDataByRange recalculates filtered data
    - Chart re-renders with new data
 
+## Assumptions
+
+- Single shared watchlist (no user authentication)
+- Fund details fetched via backend proxy (not directly from MFapi.in)
+- NAV data sorted defensively to handle edge cases
+- No user accounts or authentication system
+
+## Known Limitations
+
+- No user accounts or authentication
+- Search depends on MFapi.in availability
+- Render free tier may sleep after 15 minutes of inactivity
+- Historical NAV data limited by MFapi.in availability
+- Single watchlist shared across all users
+
+## Default Search Keywords
+
+- **Fund Families**: HDFC, ICICI, Axis, SBI, Aditya Birla, Reliance, DSP, Franklin, NIPPON, IDFC
+- **Fund Types**: Large Cap, Mid Cap, Small Cap, Balanced, Debt, Liquid, Gold, Tax Saver, Index
+- **Example Searches**: "HDFC Growth", "SBI Technology", "Axis Bluechip"
+
 ## Dependencies
 
 **Backend**
@@ -155,10 +183,39 @@ VITE_API_BASE_URL=http://localhost:5000/api
 - recharts: Data visualization
 - lucide-react: Icons (optional)
 
+## Deployment
+
+### Backend: Render.com
+```bash
+# Environment variables in Render dashboard:
+PORT=
+MONGO_URI=your_connection_string
+MF_API_BASE_URL=https://api.mfapi.in
+FRONTEND_URL=https://your-frontend-url.vercel.app
+```
+
+### Frontend: Vercel.com
+```bash
+# Environment variables in Vercel dashboard:
+VITE_API_BASE_URL=https://your-backend-url.onrender.com/api
+```
+
+See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for detailed deployment steps.
+
+## Security
+
+- All credentials stored in environment variables, never in source code
+- .env files excluded from git via .gitignore
+- CORS restricted to frontend origin
+- Input validation on all API endpoints
+- Error messages generic (no sensitive data exposure)
+
+See [SECURITY_AUDIT.md](SECURITY_AUDIT.md) for complete security audit.
+
 ## Notes
 
 - MFapi.in provides free historical NAV data for Indian mutual funds
-- MongoDB Atlas used for persistent watchlist storage
+- MongoDB Atlas auto-backs up data
 - Frontend runs on port 5173 (Vite default)
-- Backend runs on port 5000
-- CORS enabled for frontend origin
+- Backend runs on port 5000 (or Render's assigned port)
+- CORS enabled for frontend origin only
