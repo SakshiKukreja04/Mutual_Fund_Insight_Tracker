@@ -2,7 +2,11 @@
 
 A MERN stack application for tracking and analyzing Indian mutual funds with real-time NAV data and historical charting.
 
-**Live URL:** https://your-vercel-url.vercel.app
+## Live URLs
+
+- **Frontend**: https://mutual-fund-insight-tracker-l24y.vercel.app
+- **Backend**: https://mutual-fund-insight-tracker.onrender.com
+- **API Base**: https://mutual-fund-insight-tracker.onrender.com/api
 
 ## Tech Stack
 
@@ -54,10 +58,25 @@ A MERN stack application for tracking and analyzing Indian mutual funds with rea
 PORT=5000
 MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/Aureva-Fund-Insight-Tracker
 MF_API_BASE_URL=https://api.mfapi.in
+FRONTEND_URL=https://your-vercel-frontend-url.vercel.app
+```
+
+**For Local Development:**
+```
 FRONTEND_URL=http://localhost:5173
 ```
 
+**For Render Deployment:**
+```
+FRONTEND_URL=https://mutual-fund-insight-tracker-l24y.vercel.app
+```
+
 ### Frontend (.env)
+```
+VITE_API_BASE_URL=https://mutual-fund-insight-tracker.onrender.com/api
+```
+
+**For Local Development:**
 ```
 VITE_API_BASE_URL=http://localhost:5000/api
 ```
@@ -66,22 +85,123 @@ See [ENV_TEMPLATE.md](ENV_TEMPLATE.md) for template with detailed instructions.
 
 ## Run Locally
 
-### Backend
+### Prerequisites
+- Node.js v16+
+- npm or yarn
+- MongoDB Atlas account (or local MongoDB)
+- Git
+
+### Backend Setup
 ```bash
 cd backend
 npm install
-npm run dev
+# Create .env file with configuration (see Environment Variables section)
+npm start          # Production mode
+# OR
+npm run dev        # Development mode with auto-reload
 ```
 
-### Frontend
+Backend runs on `http://localhost:5000`
+
+### Frontend Setup
 ```bash
 cd frontend
 npm install
-npm run dev
+# Create .env file with configuration (see Environment Variables section)
+npm run dev        # Development server with Vite
 ```
 
-Backend runs on `http://localhost:5000`  
 Frontend runs on `http://localhost:5173`
+
+### Testing Locally
+1. Start backend: `npm start` in `backend/` folder
+2. Start frontend: `npm run dev` in `frontend/` folder
+3. Open `http://localhost:5173` in browser
+4. Search for funds and test all features
+
+---
+
+## Deployment Guide
+
+### Deploy Backend to Render
+
+1. **Create Render Account** - Go to [render.com](https://render.com)
+2. **Create New Web Service**
+   - Connect your GitHub repository
+   - Select `backend` directory as root
+   - Set Build Command: `npm install`
+   - Set Start Command: `npm start`
+3. **Add Environment Variables** in Render Dashboard:
+   - `PORT`: 5000
+   - `MONGO_URI`: Your MongoDB connection string
+   - `MF_API_BASE_URL`: https://api.mfapi.in
+   - `FRONTEND_URL`: Your Vercel frontend URL (e.g., https://your-app.vercel.app)
+4. **Deploy** - Click Deploy button
+5. **Get Render URL** - Note the service URL (e.g., https://mutual-fund-insight-tracker.onrender.com)
+
+### Deploy Frontend to Vercel
+
+1. **Create Vercel Account** - Go to [vercel.com](https://vercel.com)
+2. **Import Project**
+   - Select your GitHub repository
+   - Select `frontend` directory as root
+3. **Configure Build Settings**
+   - Framework: Vite
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+4. **Add Environment Variables**
+   - `VITE_API_BASE_URL`: https://mutual-fund-insight-tracker.onrender.com/api
+5. **Deploy** - Click Deploy button
+6. **Get Vercel URL** - Note your deployment URL
+
+### Update Backend After Frontend Deployment
+
+After frontend is deployed on Vercel:
+
+1. Update `backend/.env`:
+   ```
+   FRONTEND_URL=https://your-vercel-frontend-url.vercel.app
+   ```
+2. Push to GitHub
+3. Trigger redeploy on Render (Manual Deploy button)
+
+---
+
+## Run Locally
+
+### Prerequisites
+- Node.js v16+
+- npm or yarn
+- MongoDB Atlas account (or local MongoDB)
+- Git
+
+### Backend Setup
+```bash
+cd backend
+npm install
+# Create .env file with configuration (see Environment Variables section)
+npm start          # Production mode
+# OR
+npm run dev        # Development mode with auto-reload
+```
+
+Backend runs on `http://localhost:5000`
+
+### Frontend Setup
+```bash
+cd frontend
+npm install
+# Create .env file with configuration (see Environment Variables section)
+npm run dev        # Development server with Vite
+```
+
+Frontend runs on `http://localhost:5173`
+
+### Testing Locally
+1. Start backend: `npm start` in `backend/` folder
+2. Start frontend: `npm run dev` in `frontend/` folder
+3. Open `http://localhost:5173` in browser
+4. Search for funds and test all features
 
 ## Technical Implementation
 
@@ -148,18 +268,31 @@ Time range filters (1Y, 3Y, 5Y, All) work by:
 
 ## Assumptions
 
-- Single shared watchlist (no user authentication)
-- Fund details fetched via backend proxy (not directly from MFapi.in)
-- NAV data sorted defensively to handle edge cases
-- No user accounts or authentication system
+- **Single Shared Watchlist**: No user authentication - all users share the same watchlist
+- **Backend Proxy Pattern**: Fund details fetched via backend API (not directly from MFapi.in)
+- **NAV Data Format**: MFapi.in returns dates as `dd-mm-yyyy` strings and NAV as string values
+- **Data Sorting**: NAV data sorted defensively to handle edge cases and malformed entries
+- **In-Memory Cache**: 1-hour TTL cache for NAV data to reduce API calls to MFapi.in
+- **CORS Handling**: Backend CORS configured to allow requests from deployed Vercel frontend
 
 ## Known Limitations
 
-- No user accounts or authentication
-- Search depends on MFapi.in availability
-- Render free tier may sleep after 15 minutes of inactivity
-- Historical NAV data limited by MFapi.in availability
-- Single watchlist shared across all users
+### Current Limitations
+- **No Authentication**: Single watchlist shared across all users (no login system)
+- **External API Dependency**: Search and fund data depend on MFapi.in availability
+- **Render Sleep Mode**: Render free tier services sleep after 15 minutes of inactivity (first request may be slow)
+- **Limited Historical Data**: Historical NAV data availability depends on MFapi.in
+- **No Pagination**: Large search results may take time to load
+- **In-Memory Cache**: Cache lost on server restart (not persistent)
+- **Case Sensitivity**: Watchlist operations require exact scheme code matching
+
+### Future Improvements
+- User authentication and per-user watchlists
+- Database-backed caching for persistent cache
+- Search result pagination and filtering
+- Real-time price alerts
+- Portfolio analysis and returns calculation
+- Export watchlist to CSV/PDF
 
 ## Default Search Keywords
 
@@ -191,13 +324,7 @@ Time range filters (1Y, 3Y, 5Y, All) work by:
 PORT=
 MONGO_URI=your_connection_string
 MF_API_BASE_URL=https://api.mfapi.in
-FRONTEND_URL=https://your-frontend-url.vercel.app
-```
-
-### Frontend: Vercel.com
-```bash
-# Environment variables in Vercel dashboard:
-VITE_API_BASE_URL=https://your-backend-url.onrender.com/api
+FRONTEND_URL=https://mutual-fund-insight-tracker-l24y.vercel.app
 ```
 
 See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for detailed deployment steps.
