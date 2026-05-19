@@ -41,7 +41,9 @@ const searchFunds = async (req, res) => {
     }
 
     const baseUrl = process.env.MF_API_BASE_URL || "https://api.mfapi.in";
-    const url = `${baseUrl}/mf/search?q=${encodeURIComponent(q.trim())}`;
+    // Convert query to uppercase for case-insensitive search
+    const normalizedQuery = q.trim().toUpperCase();
+    const url = `${baseUrl}/mf/search?q=${encodeURIComponent(normalizedQuery)}`;
 
     const response = await axios.get(url);
     const results = response.data || [];
